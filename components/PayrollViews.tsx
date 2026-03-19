@@ -139,7 +139,7 @@ export function TeamImportView() {
               Upload CSV
               <input type="file" accept=".csv,text/csv" onChange={handleFileChange} className="hidden" />
             </label>
-            <button type="button" onClick={loadSampleCsv} className="rounded-full bg-pine px-5 py-3 text-sm font-semibold text-white">
+            <button type="button" onClick={loadSampleCsv} className="rounded-full border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-ink">
               Load happy-path sample
             </button>
             <button
@@ -149,7 +149,7 @@ export function TeamImportView() {
             >
               Load validation edge cases
             </button>
-            <Link href="/payroll/create" className="rounded-full border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-ink">
+            <Link href="/payroll/create" className="rounded-full bg-pine px-5 py-3 text-sm font-semibold text-white">
               Continue to batch preview
             </Link>
           </div>
@@ -242,7 +242,7 @@ export function RunBuilderView() {
         </div>
           <div className="mt-6 rounded-3xl bg-pine p-5 text-white">
             <p className="text-sm text-white/75">Conversion preview</p>
-            <p className="mt-2 text-3xl font-semibold">{summary.totalZec.toFixed(8)} ZEC</p>
+            <p className="mt-2 text-3xl font-semibold">{summary.totalZec.toFixed(4)} ZEC</p>
             <p className="mt-2 text-sm text-white/75">
               ${summary.totalUsd.toLocaleString()} across {summary.readyRows} ready recipients using an admin-entered rate of ${rate.toFixed(2)} / ZEC.
             </p>
@@ -285,7 +285,7 @@ export function RunBuilderView() {
             {[5000, 12500, 40000].map((amount) => (
               <div key={amount} className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
                 <p className="text-sm font-medium text-ink/60">Fund ${amount.toLocaleString()}</p>
-                <p className="mt-2 text-2xl font-semibold text-ink">{(amount / rate).toFixed(8)} ZEC</p>
+                <p className="mt-2 text-2xl font-semibold text-ink">{(amount / rate).toFixed(4)} ZEC</p>
                 <p className="mt-1 text-sm text-ink/60">Mock routing fee ${(amount * 0.0018).toFixed(2)}</p>
                 <p className="mt-4 text-xs font-semibold uppercase tracking-[0.2em] text-pine/70">Same-day simulated settlement</p>
               </div>

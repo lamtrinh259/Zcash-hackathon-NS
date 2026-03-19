@@ -270,21 +270,38 @@ export function buildBatchSummary(rows: ValidatedRow[], testTxConfirmed: Record<
   } satisfies BatchSummary;
 }
 
+/** Base64url-encode a UTF-8 memo string per ZIP-321 (RFC 4648 §5, no padding). */
+function memoToBase64url(memo: string) {
+  const bytes = new TextEncoder().encode(memo);
+  let binary = "";
+  for (let i = 0; i < bytes.length; i++) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+  return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+}
+
 export function generateZip321Uri(rows: ValidatedRow[]) {
   if (rows.length === 0) {
     return "";
   }
 
-  const params = rows.flatMap((row, index) => {
-    const suffix = index === 0 ? "" : `.${index}`;
+  const [first, ...rest] = rows;
+
+  const firstParams = [
+    `amount=${first.zecAmount.toFixed(8)}`,
+    `memo=${memoToBase64url(first.memo)}`
+  ];
+
+  const restParams = rest.flatMap((row, index) => {
+    const suffix = `.${index + 1}`;
     return [
-      `address${suffix}=${encodeURIComponent(row.wallet)}`,
+      `address${suffix}=${row.wallet}`,
       `amount${suffix}=${row.zecAmount.toFixed(8)}`,
-      `memo${suffix}=${encodeURIComponent(row.memo)}`
+      `memo${suffix}=${memoToBase64url(row.memo)}`
     ];
   });
 
-  return `zcash:?${params.join("&")}`;
+  return `zcash:${first.wallet}?${[...firstParams, ...restParams].join("&")}`;
 }
 
 export function generateAuditLog(rows: ValidatedRow[], rate: number, approvedAt: string | null) {

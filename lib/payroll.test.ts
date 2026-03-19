@@ -47,14 +47,13 @@ test("convertUsdToZec returns zero when the rate is not positive", () => {
   assert.equal(convertUsdToZec(100, 0), 0);
 });
 
-test("generateZip321Uri builds indexed ZIP-321 params for multi-recipient batches", () => {
+test("generateZip321Uri builds correct ZIP-321 URI with first address as path component", () => {
   const rows = validateRows(VALID_CSV, 25);
   const uri = generateZip321Uri(rows);
 
-  assert.ok(uri.includes("zcash:?"));
-  assert.ok(uri.includes("address=u1adalovelace1234567890abcdef"));
+  assert.ok(uri.startsWith("zcash:u1adalovelace1234567890abcdef?"));
   assert.ok(uri.includes("amount=4.00000000"));
-  assert.ok(uri.includes("memo=Payroll%2C%20March"));
+  assert.ok(uri.includes("memo=UGF5cm9sbCwgTWFyY2g"));
   assert.ok(uri.includes("address.1=u1gracehopper1234567890abcdef"));
   assert.ok(uri.includes("amount.1=2.00000000"));
 });
@@ -63,31 +62,31 @@ test("generateZip321Uri preserves ZIP-321 parameter grouping and index order", (
   const rows = validateRows(VALID_CSV, 25);
   const uri = generateZip321Uri(rows);
 
-  assert.match(uri, /^zcash:\?/);
+  assert.match(uri, /^zcash:u1adalovelace/);
 
-  const query = uri.slice("zcash:?".length);
+  const query = uri.slice(uri.indexOf("?") + 1);
   const params = query.split("&");
 
   assert.deepEqual(params, [
-    "address=u1adalovelace1234567890abcdef",
     "amount=4.00000000",
-    "memo=Payroll%2C%20March",
+    "memo=UGF5cm9sbCwgTWFyY2g",
     "address.1=u1gracehopper1234567890abcdef",
     "amount.1=2.00000000",
-    "memo.1=Second%20payout"
+    "memo.1=U2Vjb25kIHBheW91dA"
   ]);
 });
 
-test("generateZip321Uri percent-encodes memo edge cases without changing recipient order", () => {
+test("generateZip321Uri base64url-encodes memo edge cases per ZIP-321 spec", () => {
   const csv = `contractorId,name,role,country,usdAmount,wallet,requiresTestTx,memo
 CTR-1,Ada Lovelace,Engineer,UK,100,u1adalovelace1234567890abcdef,false,"Ops & payroll / March? #1 + coffee"
 CTR-2,Grace Hopper,QA,US,50,u1gracehopper1234567890abcdef,false,"Quoted ""memo"" with % and emoji rocket"`;
   const rows = validateRows(csv, 25);
   const uri = generateZip321Uri(rows);
 
-  assert.ok(uri.includes("memo=Ops%20%26%20payroll%20%2F%20March%3F%20%231%20%2B%20coffee"));
-  assert.ok(uri.includes("memo.1=Quoted%20%22memo%22%20with%20%25%20and%20emoji%20rocket"));
-  assert.ok(uri.indexOf("address=u1adalovelace1234567890abcdef") < uri.indexOf("address.1=u1gracehopper1234567890abcdef"));
+  assert.ok(uri.includes("memo=T3BzICYgcGF5cm9sbCAvIE1hcmNoPyAjMSArIGNvZmZlZQ"));
+  assert.ok(uri.includes("memo.1=UXVvdGVkICJtZW1vIiB3aXRoICUgYW5kIGVtb2ppIHJvY2tldA"));
+  assert.ok(uri.startsWith("zcash:u1adalovelace1234567890abcdef?"));
+  assert.ok(uri.includes("address.1=u1gracehopper1234567890abcdef"));
 });
 
 test("generateZip321Uri formats decimal amounts to exactly 8 places", () => {
@@ -100,6 +99,7 @@ CTR-2,Grace Hopper,QA,US,2,u1gracehopper1234567890abcdef,false,Second payout`;
   assert.ok(uri.includes("amount=0.33333333"));
   assert.ok(uri.includes("amount.1=0.66666667"));
   assert.equal(uri.includes("amount=0.333333333"), false);
+  assert.ok(uri.includes("memo=U21hbGwgYW1vdW50"));
 });
 
 test("generateZip321Uri returns an empty string for empty recipient batches", () => {

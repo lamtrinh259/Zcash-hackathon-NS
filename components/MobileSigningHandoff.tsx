@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { QRCodeSVG } from "qrcode.react";
 import { DownloadArtifactButton } from "./DownloadArtifactButton";
 
 type Props = {
@@ -104,6 +105,27 @@ export function MobileSigningHandoff({ zip321Uri, handoffText, approvedAt, recip
           value={zip321Uri || "Approve the ready batch to generate the mobile handoff URI."}
           className="mt-4 h-40 w-full rounded-3xl border border-slate-200 bg-white px-4 py-4 font-mono text-xs text-ink"
         />
+      </div>
+
+      <div className="mt-6 rounded-3xl bg-slate-50 p-5">
+        <p className="text-sm font-semibold text-ink">Scan with Zodl</p>
+        <p className="mt-2 text-xs text-ink/50">Point the Zodl app camera at this QR code to import the ZIP-321 signing request directly.</p>
+        <div className="mt-4 flex items-center justify-center">
+          {hasUri ? (
+            <div className="rounded-2xl bg-white p-4 shadow-sm">
+              <QRCodeSVG
+                value={zip321Uri}
+                size={220}
+                level="M"
+                includeMargin={false}
+              />
+            </div>
+          ) : (
+            <div className="flex h-[252px] w-[252px] items-center justify-center rounded-2xl border-2 border-dashed border-slate-300 bg-white">
+              <p className="px-6 text-center text-sm text-ink/40">QR code will appear here after batch approval</p>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
