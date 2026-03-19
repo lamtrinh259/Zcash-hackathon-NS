@@ -1,7 +1,7 @@
 "use client";
 
-import { PayoutStatusBadge } from "@/components/PayoutStatusBadge";
-import type { ValidatedRow } from "@/lib/payroll";
+import { PayoutStatusBadge } from "./PayoutStatusBadge";
+import type { ValidatedRow } from "../lib/payroll";
 
 type Props = {
   rows: ValidatedRow[];

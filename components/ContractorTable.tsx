@@ -1,5 +1,5 @@
-import { Contractor } from "@/data/mockData";
-import { PayoutStatusBadge } from "@/components/PayoutStatusBadge";
+import { Contractor } from "../data/mockData";
+import { PayoutStatusBadge } from "./PayoutStatusBadge";
 
 export function ContractorTable({ rows }: { rows: Contractor[] }) {
   return (

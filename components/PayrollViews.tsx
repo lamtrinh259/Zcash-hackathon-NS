@@ -2,13 +2,13 @@
 
 import Link from "next/link";
 import type { ChangeEvent } from "react";
-import { DownloadArtifactButton } from "@/components/DownloadArtifactButton";
-import { ImportReviewTable } from "@/components/ImportReviewTable";
-import { PayoutStatusBadge } from "@/components/PayoutStatusBadge";
-import { PayrollSummaryCards } from "@/components/PayrollSummaryCards";
-import { PrivacyExplainer } from "@/components/PrivacyExplainer";
-import { StatList } from "@/components/StatList";
-import { usePayrollOps } from "@/components/PayrollOpsProvider";
+import { DownloadArtifactButton } from "./DownloadArtifactButton";
+import { ImportReviewTable } from "./ImportReviewTable";
+import { PayoutStatusBadge } from "./PayoutStatusBadge";
+import { PayrollSummaryCards } from "./PayrollSummaryCards";
+import { PrivacyExplainer } from "./PrivacyExplainer";
+import { StatList } from "./StatList";
+import { usePayrollOps } from "./PayrollOpsProvider";
 
 function formatTimestamp(value: string | null) {
   if (!value) {

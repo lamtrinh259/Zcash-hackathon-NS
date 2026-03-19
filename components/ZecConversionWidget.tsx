@@ -1,4 +1,4 @@
-import { conversionScenarios } from "@/data/mockData";
+import { conversionScenarios } from "../data/mockData";
 
 export function ZecConversionWidget() {
   return (

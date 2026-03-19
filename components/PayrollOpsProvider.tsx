@@ -11,7 +11,7 @@ import {
   getWorkflowGate,
   payoutStatusForIndex,
   validateRows
-} from "@/lib/payroll";
+} from "../lib/payroll";
 
 const STORAGE_KEY = "zec-payroll-tool-state";
 

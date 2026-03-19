@@ -1,8 +1,8 @@
 import Link from "next/link";
-import { PrivacyExplainer } from "@/components/PrivacyExplainer";
-import { PayrollSummaryCards } from "@/components/PayrollSummaryCards";
-import { ZecConversionWidget } from "@/components/ZecConversionWidget";
-import { kpis } from "@/data/mockData";
+import { PrivacyExplainer } from "../components/PrivacyExplainer";
+import { PayrollSummaryCards } from "../components/PayrollSummaryCards";
+import { ZecConversionWidget } from "../components/ZecConversionWidget";
+import { kpis } from "../data/mockData";
 
 export default function LandingPage() {
   return (

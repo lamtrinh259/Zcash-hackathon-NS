@@ -1,6 +1,6 @@
-import { AppShell } from "@/components/AppShell";
-import { PayrollOpsProvider } from "@/components/PayrollOpsProvider";
-import { PayoutsView } from "@/components/PayrollViews";
+import { AppShell } from "../../components/AppShell";
+import { PayrollOpsProvider } from "../../components/PayrollOpsProvider";
+import { PayoutsView } from "../../components/PayrollViews";
 
 export default function PayoutsPage() {
   return (
