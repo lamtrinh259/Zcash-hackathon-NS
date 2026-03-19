@@ -37,6 +37,15 @@ export type BatchArtifact = {
   auditLog: string;
 };
 
+export type WorkflowGate = {
+  validRows: ValidatedRow[];
+  readyRows: ValidatedRow[];
+  heldRows: ValidatedRow[];
+  invalidRows: ValidatedRow[];
+  canFinalize: boolean;
+  blockers: string[];
+};
+
 export const SAMPLE_RATE = 31.84;
 
 export const SAMPLE_CSV = `contractorId,name,role,country,usdAmount,wallet,requiresTestTx,memo
@@ -101,7 +110,7 @@ function toBoolean(value: string) {
   return value.trim().toLowerCase() === "true";
 }
 
-function toZecAmount(usdAmount: number, rate: number) {
+export function convertUsdToZec(usdAmount: number, rate: number) {
   if (rate <= 0) {
     return 0;
   }
@@ -203,21 +212,48 @@ export function validateRows(csvText: string, rate: number) {
       ...row,
       usdAmountNumber,
       requiresTestTxBoolean,
-      zecAmount: toZecAmount(usdAmountNumber, rate),
+      zecAmount: convertUsdToZec(usdAmountNumber, rate),
       issues
     } satisfies ValidatedRow;
   });
 }
 
-export function buildBatchSummary(rows: ValidatedRow[], testTxConfirmed: Record<string, boolean>) {
+export function getWorkflowGate(rows: ValidatedRow[], testTxConfirmed: Record<string, boolean>): WorkflowGate {
   const validRows = rows.filter((row) => row.issues.length === 0);
   const readyRows = validRows.filter((row) => !row.requiresTestTxBoolean || testTxConfirmed[row.contractorId]);
   const heldRows = validRows.filter((row) => row.requiresTestTxBoolean && !testTxConfirmed[row.contractorId]);
+  const invalidRows = rows.filter((row) => row.issues.length > 0);
+  const blockers: string[] = [];
+
+  if (invalidRows.length > 0) {
+    blockers.push(`${invalidRows.length} row${invalidRows.length === 1 ? "" : "s"} still failing validation.`);
+  }
+
+  if (heldRows.length > 0) {
+    blockers.push(`${heldRows.length} required test transaction${heldRows.length === 1 ? "" : "s"} still unconfirmed.`);
+  }
+
+  if (readyRows.length === 0) {
+    blockers.push("At least one ready recipient is required before finalizing.");
+  }
+
+  return {
+    validRows,
+    readyRows,
+    heldRows,
+    invalidRows,
+    canFinalize: blockers.length === 0,
+    blockers
+  };
+}
+
+export function buildBatchSummary(rows: ValidatedRow[], testTxConfirmed: Record<string, boolean>) {
+  const { validRows, readyRows, heldRows, invalidRows } = getWorkflowGate(rows, testTxConfirmed);
 
   return {
     totalRows: rows.length,
     validRows: validRows.length,
-    invalidRows: rows.length - validRows.length,
+    invalidRows: invalidRows.length,
     readyRows: readyRows.length,
     heldRows: heldRows.length,
     totalUsd: readyRows.reduce((sum, row) => sum + row.usdAmountNumber, 0),

@@ -7,6 +7,7 @@ import {
   SAMPLE_RATE,
   buildArtifacts,
   buildBatchSummary,
+  getWorkflowGate,
   payoutStatusForIndex,
   validateRows
 } from "@/lib/payroll";
@@ -32,6 +33,8 @@ type PayrollOpsContextValue = {
   summary: ReturnType<typeof buildBatchSummary>;
   artifacts: ReturnType<typeof buildArtifacts>;
   testTxConfirmed: Record<string, boolean>;
+  canApproveBatch: boolean;
+  approvalBlockers: string[];
   payoutRows: Array<ReturnType<typeof validateRows>[number] & { payoutStatus: ReturnType<typeof payoutStatusForIndex> }>;
   setCsvText: (value: string) => void;
   setRate: (value: number) => void;
@@ -102,10 +105,8 @@ export function PayrollOpsProvider({ children }: { children: ReactNode }) {
   }, [approvedAt, csvText, hasLoaded, rate, testTxConfirmed]);
 
   const rows = validateRows(csvText, rate);
-  const validRows = rows.filter((row) => row.issues.length === 0);
-  const readyRows = validRows.filter((row) => !row.requiresTestTxBoolean || testTxConfirmed[row.contractorId]);
-  const heldRows = validRows.filter((row) => row.requiresTestTxBoolean && !testTxConfirmed[row.contractorId]);
-  const invalidRows = rows.filter((row) => row.issues.length > 0);
+  const workflowGate = getWorkflowGate(rows, testTxConfirmed);
+  const { validRows, readyRows, heldRows, invalidRows, canFinalize, blockers } = workflowGate;
   const summary = buildBatchSummary(rows, testTxConfirmed);
   const artifacts = buildArtifacts(readyRows, rate, approvedAt);
   const payoutRows = readyRows.map((row, index) => ({
@@ -126,6 +127,8 @@ export function PayrollOpsProvider({ children }: { children: ReactNode }) {
       summary,
       artifacts,
       testTxConfirmed,
+      canApproveBatch: canFinalize,
+      approvalBlockers: blockers,
       payoutRows,
       setCsvText(value: string) {
         setApprovedAt(null);
@@ -147,13 +150,17 @@ export function PayrollOpsProvider({ children }: { children: ReactNode }) {
         }));
       },
       approveBatch() {
+        if (!canFinalize) {
+          return;
+        }
+
         setApprovedAt(new Date().toISOString());
       },
       resetBatch() {
         setApprovedAt(null);
       }
     }),
-    [approvedAt, artifacts, csvText, heldRows, invalidRows, payoutRows, rate, readyRows, rows, summary, testTxConfirmed, validRows]
+    [approvedAt, artifacts, blockers, canFinalize, csvText, heldRows, invalidRows, payoutRows, rate, readyRows, rows, summary, testTxConfirmed, validRows]
   );
 
   return <PayrollOpsContext.Provider value={value}>{children}</PayrollOpsContext.Provider>;

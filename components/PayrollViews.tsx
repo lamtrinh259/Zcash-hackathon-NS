@@ -282,7 +282,8 @@ export function RunBuilderView() {
 }
 
 export function ReviewView() {
-  const { heldRows, summary, approveBatch, approvedAt, artifacts, testTxConfirmed, toggleTestTx, rows } = usePayrollOps();
+  const { heldRows, summary, approveBatch, approvedAt, artifacts, testTxConfirmed, toggleTestTx, rows, canApproveBatch, approvalBlockers } =
+    usePayrollOps();
 
   return (
     <div className="grid gap-8">
@@ -304,13 +305,25 @@ export function ReviewView() {
             </p>
           </div>
           <div className="mt-6 flex flex-wrap gap-3">
-            <button type="button" onClick={approveBatch} className="rounded-full bg-pine px-5 py-3 text-sm font-semibold text-white">
+            <button
+              type="button"
+              onClick={approveBatch}
+              disabled={!canApproveBatch}
+              className={`rounded-full px-5 py-3 text-sm font-semibold text-white ${
+                canApproveBatch ? "bg-pine" : "cursor-not-allowed bg-slate-300"
+              }`}
+            >
               Approve mocked payout batch
             </button>
             <Link href="/payouts" className="rounded-full border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-ink">
               View payout artifacts
             </Link>
           </div>
+          {!canApproveBatch ? (
+            <div className="mt-4 rounded-3xl bg-amber-50 p-4 text-sm text-amber-800">
+              {approvalBlockers.join(" ")}
+            </div>
+          ) : null}
           <div className="mt-6 rounded-3xl bg-slate-50 p-5">
             <p className="text-sm font-semibold text-ink">ZIP-321 preview</p>
             <p className="mt-3 break-all font-mono text-xs text-ink/70">{artifacts.zip321Uri || "Approve the ready recipients to generate a URI."}</p>
