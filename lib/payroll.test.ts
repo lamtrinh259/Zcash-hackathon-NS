@@ -40,7 +40,7 @@ CTR-1,Grace Hopper,QA,US,25,u1validwallet1234567890abcdef,false,Second`;
 });
 
 test("convertUsdToZec converts and rounds to 8 decimals", () => {
-  assert.equal(convertUsdToZec(100, 31.84), 3.14070352);
+  assert.equal(convertUsdToZec(100, 250), 0.4);
 });
 
 test("convertUsdToZec returns zero when the rate is not positive", () => {

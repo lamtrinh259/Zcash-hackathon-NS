@@ -13,7 +13,7 @@ export function ZecConversionWidget() {
         </div>
         <div className="rounded-2xl bg-mint px-4 py-3 text-right">
           <p className="text-xs uppercase tracking-[0.2em] text-pine/60">Indicative rate</p>
-          <p className="text-2xl font-semibold text-pine">$142.02 / ZEC</p>
+          <p className="text-2xl font-semibold text-pine">$250.00 / ZEC</p>
         </div>
       </div>
       <div className="mt-6 grid gap-4 md:grid-cols-3">

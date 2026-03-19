@@ -47,7 +47,7 @@ export type WorkflowGate = {
   blockers: string[];
 };
 
-export const SAMPLE_RATE = 31.84;
+export const SAMPLE_RATE = 250;
 
 export const SAMPLE_CSV = `contractorId,name,role,country,usdAmount,wallet,requiresTestTx,memo
 CTR-301,Maya Thompson,Product Designer,United Kingdom,4200,u1mayathompson8kzt9q2l0p4x6s7v8w1y2z3a4b5c6d7e8f9g,true,March design sprint payout
