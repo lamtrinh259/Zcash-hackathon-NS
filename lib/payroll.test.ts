@@ -110,4 +110,6 @@ test("artifact helpers build summary totals and a JSON audit artifact from ready
   assert.equal(audit.recipients[1].contractorId, "CTR-2");
   assert.equal(audit.recipients[1].requiresTestTx, false);
   assert.ok(artifacts.zip321Uri.includes("address.1=u1gracehopper1234567890abcdef"));
+  assert.ok(artifacts.handoffText.includes("Zodl mobile signing handoff"));
+  assert.ok(artifacts.handoffText.includes(artifacts.zip321Uri));
 });

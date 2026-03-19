@@ -4,6 +4,7 @@ import Link from "next/link";
 import type { ChangeEvent } from "react";
 import { DownloadArtifactButton } from "./DownloadArtifactButton";
 import { ImportReviewTable } from "./ImportReviewTable";
+import { MobileSigningHandoff } from "./MobileSigningHandoff";
 import { PayoutStatusBadge } from "./PayoutStatusBadge";
 import { PayrollSummaryCards } from "./PayrollSummaryCards";
 import { PrivacyExplainer } from "./PrivacyExplainer";
@@ -390,9 +391,9 @@ export function ReviewView() {
             </div>
             <div className="flex flex-wrap gap-3">
               <DownloadArtifactButton
-                label="Download URI"
-                filename="run-0319-mvp.txt"
-                content={artifacts.zip321Uri}
+                label="Download handoff .txt"
+                filename="run-0319-zodl-handoff.txt"
+                content={artifacts.handoffText}
                 mimeType="text/plain;charset=utf-8"
               />
               <DownloadArtifactButton
@@ -409,12 +410,19 @@ export function ReviewView() {
           </div>
         </div>
       ) : null}
+      <MobileSigningHandoff
+        zip321Uri={artifacts.zip321Uri}
+        handoffText={artifacts.handoffText}
+        approvedAt={approvedAt}
+        recipientCount={summary.readyRows}
+        totalZec={summary.totalZec}
+      />
     </div>
   );
 }
 
 export function PayoutsView() {
-  const { approvedAt, payoutRows, artifacts } = usePayrollOps();
+  const { approvedAt, payoutRows, artifacts, summary } = usePayrollOps();
 
   return (
     <>
@@ -474,22 +482,13 @@ export function PayoutsView() {
         </div>
       </div>
       <div className="mt-8 grid gap-8 lg:grid-cols-2">
-        <div className="panel p-6">
-          <div className="flex items-center justify-between gap-3">
-            <div>
-              <p className="section-label">Artifact Export</p>
-              <h2 className="mt-3 text-2xl font-semibold text-ink">ZIP-321 URI text</h2>
-            </div>
-            <DownloadArtifactButton
-              label={artifacts.zip321Uri ? "Download .txt" : "Download locked"}
-              filename="run-0319-mvp.txt"
-              content={artifacts.zip321Uri}
-              mimeType="text/plain;charset=utf-8"
-              disabled={!artifacts.zip321Uri}
-            />
-          </div>
-          <textarea readOnly value={artifacts.zip321Uri} className="mt-5 h-56 w-full rounded-3xl border border-slate-200 bg-slate-50 px-4 py-4 font-mono text-xs text-ink" />
-        </div>
+        <MobileSigningHandoff
+          zip321Uri={artifacts.zip321Uri}
+          handoffText={artifacts.handoffText}
+          approvedAt={approvedAt}
+          recipientCount={payoutRows.length}
+          totalZec={summary.totalZec}
+        />
         <div className="panel p-6">
           <div className="flex items-center justify-between gap-3">
             <div>

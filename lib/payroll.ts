@@ -34,6 +34,7 @@ export type BatchSummary = {
 
 export type BatchArtifact = {
   zip321Uri: string;
+  handoffText: string;
   auditLog: string;
 };
 
@@ -310,9 +311,37 @@ export function generateAuditLog(rows: ValidatedRow[], rate: number, approvedAt:
   );
 }
 
+export function generateZip321HandoffText(rows: ValidatedRow[], rate: number, approvedAt: string | null) {
+  const zip321Uri = generateZip321Uri(rows);
+  const totalUsd = rows.reduce((sum, row) => sum + row.usdAmountNumber, 0);
+  const totalZec = Number(rows.reduce((sum, row) => sum + row.zecAmount, 0).toFixed(8));
+
+  return [
+    "ZEC Payroll Tool: Zodl mobile signing handoff",
+    "",
+    "This artifact is for mobile wallet handoff only.",
+    "Generate the ZIP-321 URI in the demo, then move it to the Zodl mobile app for signing.",
+    "",
+    `Approved at: ${approvedAt ?? "Not approved"}`,
+    `Recipients: ${rows.length}`,
+    `Total USD: ${totalUsd.toFixed(2)}`,
+    `Total ZEC: ${totalZec.toFixed(8)}`,
+    `Rate USD/ZEC: ${rate.toFixed(2)}`,
+    "",
+    "Mobile steps:",
+    "1. Open Zodl on a mobile device.",
+    "2. Transfer the URI below by copy/paste, AirDrop, email, chat, or QR from another device.",
+    "3. Review the recipients and amounts in Zodl, then sign there.",
+    "",
+    "ZIP-321 URI:",
+    zip321Uri
+  ].join("\n");
+}
+
 export function buildArtifacts(rows: ValidatedRow[], rate: number, approvedAt: string | null): BatchArtifact {
   return {
     zip321Uri: generateZip321Uri(rows),
+    handoffText: generateZip321HandoffText(rows, rate, approvedAt),
     auditLog: generateAuditLog(rows, rate, approvedAt)
   };
 }
