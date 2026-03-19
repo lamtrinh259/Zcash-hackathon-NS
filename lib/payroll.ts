@@ -321,6 +321,7 @@ export function generateZip321HandoffText(rows: ValidatedRow[], rate: number, ap
     "",
     "This artifact is for mobile wallet handoff only.",
     "Generate the ZIP-321 URI in the demo, then move it to the Zodl mobile app for signing.",
+    "Zodl mainnet validation remains a manual mobile-wallet check before signing.",
     "",
     `Approved at: ${approvedAt ?? "Not approved"}`,
     `Recipients: ${rows.length}`,
@@ -331,7 +332,8 @@ export function generateZip321HandoffText(rows: ValidatedRow[], rate: number, ap
     "Mobile steps:",
     "1. Open Zodl on a mobile device.",
     "2. Transfer the URI below by copy/paste, AirDrop, email, chat, or QR from another device.",
-    "3. Review the recipients and amounts in Zodl, then sign there.",
+    "3. Review every recipient, amount, and memo in Zodl on mainnet.",
+    "4. Sign in Zodl only after that manual mobile validation.",
     "",
     "ZIP-321 URI:",
     zip321Uri

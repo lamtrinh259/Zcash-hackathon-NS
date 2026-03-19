@@ -4,6 +4,7 @@ import {
   buildArtifacts,
   buildBatchSummary,
   convertUsdToZec,
+  generateZip321HandoffText,
   generateZip321Uri,
   getWorkflowGate,
   parseCsv,
@@ -56,6 +57,53 @@ test("generateZip321Uri builds indexed ZIP-321 params for multi-recipient batche
   assert.ok(uri.includes("memo=Payroll%2C%20March"));
   assert.ok(uri.includes("address.1=u1gracehopper1234567890abcdef"));
   assert.ok(uri.includes("amount.1=2.00000000"));
+});
+
+test("generateZip321Uri preserves ZIP-321 parameter grouping and index order", () => {
+  const rows = validateRows(VALID_CSV, 25);
+  const uri = generateZip321Uri(rows);
+
+  assert.match(uri, /^zcash:\?/);
+
+  const query = uri.slice("zcash:?".length);
+  const params = query.split("&");
+
+  assert.deepEqual(params, [
+    "address=u1adalovelace1234567890abcdef",
+    "amount=4.00000000",
+    "memo=Payroll%2C%20March",
+    "address.1=u1gracehopper1234567890abcdef",
+    "amount.1=2.00000000",
+    "memo.1=Second%20payout"
+  ]);
+});
+
+test("generateZip321Uri percent-encodes memo edge cases without changing recipient order", () => {
+  const csv = `contractorId,name,role,country,usdAmount,wallet,requiresTestTx,memo
+CTR-1,Ada Lovelace,Engineer,UK,100,u1adalovelace1234567890abcdef,false,"Ops & payroll / March? #1 + coffee"
+CTR-2,Grace Hopper,QA,US,50,u1gracehopper1234567890abcdef,false,"Quoted ""memo"" with % and emoji rocket"`;
+  const rows = validateRows(csv, 25);
+  const uri = generateZip321Uri(rows);
+
+  assert.ok(uri.includes("memo=Ops%20%26%20payroll%20%2F%20March%3F%20%231%20%2B%20coffee"));
+  assert.ok(uri.includes("memo.1=Quoted%20%22memo%22%20with%20%25%20and%20emoji%20rocket"));
+  assert.ok(uri.indexOf("address=u1adalovelace1234567890abcdef") < uri.indexOf("address.1=u1gracehopper1234567890abcdef"));
+});
+
+test("generateZip321Uri formats decimal amounts to exactly 8 places", () => {
+  const csv = `contractorId,name,role,country,usdAmount,wallet,requiresTestTx,memo
+CTR-1,Ada Lovelace,Engineer,UK,1,u1adalovelace1234567890abcdef,false,Small amount
+CTR-2,Grace Hopper,QA,US,2,u1gracehopper1234567890abcdef,false,Second payout`;
+  const rows = validateRows(csv, 3);
+  const uri = generateZip321Uri(rows);
+
+  assert.ok(uri.includes("amount=0.33333333"));
+  assert.ok(uri.includes("amount.1=0.66666667"));
+  assert.equal(uri.includes("amount=0.333333333"), false);
+});
+
+test("generateZip321Uri returns an empty string for empty recipient batches", () => {
+  assert.equal(generateZip321Uri([]), "");
 });
 
 test("workflow gating blocks finalization until required test transactions are confirmed", () => {
@@ -112,4 +160,29 @@ test("artifact helpers build summary totals and a JSON audit artifact from ready
   assert.ok(artifacts.zip321Uri.includes("address.1=u1gracehopper1234567890abcdef"));
   assert.ok(artifacts.handoffText.includes("Zodl mobile signing handoff"));
   assert.ok(artifacts.handoffText.includes(artifacts.zip321Uri));
+});
+
+test("generateZip321HandoffText includes required mobile signing instructions and manual validation caveat", () => {
+  const rows = validateRows(VALID_CSV, 25);
+  const handoffText = generateZip321HandoffText(rows, 25, "2026-03-19T00:00:00.000Z");
+
+  assert.ok(handoffText.includes("This artifact is for mobile wallet handoff only."));
+  assert.ok(handoffText.includes("Zodl mainnet validation remains a manual mobile-wallet check before signing."));
+  assert.ok(handoffText.includes("1. Open Zodl on a mobile device."));
+  assert.ok(handoffText.includes("2. Transfer the URI below by copy/paste, AirDrop, email, chat, or QR from another device."));
+  assert.ok(handoffText.includes("3. Review every recipient, amount, and memo in Zodl on mainnet."));
+  assert.ok(handoffText.includes("4. Sign in Zodl only after that manual mobile validation."));
+  assert.ok(handoffText.includes("ZIP-321 URI:"));
+  assert.ok(handoffText.includes(generateZip321Uri(rows)));
+});
+
+test("buildArtifacts keeps empty-batch handoff artifacts explicit without emitting a malformed URI", () => {
+  const artifacts = buildArtifacts([], 25, null);
+
+  assert.equal(artifacts.zip321Uri, "");
+  assert.ok(artifacts.handoffText.includes("Approved at: Not approved"));
+  assert.ok(artifacts.handoffText.includes("Recipients: 0"));
+  assert.ok(artifacts.handoffText.includes("Total USD: 0.00"));
+  assert.ok(artifacts.handoffText.includes("Total ZEC: 0.00000000"));
+  assert.match(artifacts.auditLog, /"recipients": \[\]/);
 });
