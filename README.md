@@ -20,9 +20,18 @@ It is not payroll compliance software, HRIS, tax tooling, or live chain infrastr
 
 ## Setup
 
+Use Node `22` or newer. The repo includes `.nvmrc`, `.npmrc`, and a committed `package-lock.json` so fresh installs resolve the same toolchain and still pull dev dependencies even if `NODE_ENV=production` is set in the shell.
+
 1. Run `npm install`.
-2. Run `npm run dev`.
-3. Open `http://localhost:3000`.
+2. Run `npm test`.
+3. Run `npm run build`.
+4. Run `npm run dev`.
+5. Open `http://localhost:3000`.
+
+## Demo data
+
+- `Load happy-path sample` seeds a clean run that can move from import to approval and export without edits.
+- `Load validation edge cases` restores the intentionally broken rows for row-level validation demos.
 
 ## Demo script
 

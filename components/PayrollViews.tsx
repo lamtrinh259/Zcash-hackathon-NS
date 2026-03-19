@@ -100,7 +100,7 @@ export function DashboardView() {
 }
 
 export function TeamImportView() {
-  const { csvText, setCsvText, loadSampleCsv, summary, invalidRows, rows } = usePayrollOps();
+  const { csvText, setCsvText, loadSampleCsv, loadReviewSampleCsv, summary, invalidRows, rows } = usePayrollOps();
 
   function handleFileChange(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
@@ -125,8 +125,8 @@ export function TeamImportView() {
           <p className="section-label">CSV Import</p>
           <h2 className="mt-3 text-2xl font-semibold text-ink">Upload or paste contractor payout rows</h2>
           <p className="mt-3 text-sm text-ink/65">
-            The demo uses pasted CSV text instead of a real file uploader so judges can see the exact seed data, edit a row,
-            and watch validation update instantly.
+            Start with the approval-ready sample for the clean demo path, or switch to the edge-case sample to show row-level
+            validation failures without leaving this screen.
           </p>
           <textarea
             value={csvText}
@@ -139,7 +139,14 @@ export function TeamImportView() {
               <input type="file" accept=".csv,text/csv" onChange={handleFileChange} className="hidden" />
             </label>
             <button type="button" onClick={loadSampleCsv} className="rounded-full bg-pine px-5 py-3 text-sm font-semibold text-white">
-              Load seeded sample
+              Load happy-path sample
+            </button>
+            <button
+              type="button"
+              onClick={loadReviewSampleCsv}
+              className="rounded-full border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-ink"
+            >
+              Load validation edge cases
             </button>
             <Link href="/payroll/create" className="rounded-full border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-ink">
               Continue to batch preview
@@ -164,8 +171,8 @@ export function TeamImportView() {
           </div>
           <div className="mt-5 rounded-3xl bg-rose-50 p-5 text-sm text-rose-800">
             {invalidRows.length > 0
-              ? `${invalidRows.length} row-level validation errors are visible in the table. The sample intentionally includes a bad wallet and a negative USD amount.`
-              : "All rows currently pass validation."}
+              ? `${invalidRows.length} row-level validation errors are visible in the table. Switch back to the happy-path sample when you want the clean approval flow.`
+              : "All rows currently pass validation. Continue to conversion to preview the ready batch totals."}
           </div>
         </div>
       </div>
@@ -232,13 +239,22 @@ export function RunBuilderView() {
             <p className="mt-2 text-2xl font-semibold text-ink">{heldRows.length}</p>
           </div>
         </div>
-        <div className="mt-6 rounded-3xl bg-pine p-5 text-white">
-          <p className="text-sm text-white/75">Conversion preview</p>
-          <p className="mt-2 text-3xl font-semibold">{summary.totalZec.toFixed(8)} ZEC</p>
-          <p className="mt-2 text-sm text-white/75">
-            ${summary.totalUsd.toLocaleString()} across {summary.readyRows} ready recipients using an admin-entered rate of ${rate.toFixed(2)} / ZEC.
-          </p>
-        </div>
+          <div className="mt-6 rounded-3xl bg-pine p-5 text-white">
+            <p className="text-sm text-white/75">Conversion preview</p>
+            <p className="mt-2 text-3xl font-semibold">{summary.totalZec.toFixed(8)} ZEC</p>
+            <p className="mt-2 text-sm text-white/75">
+              ${summary.totalUsd.toLocaleString()} across {summary.readyRows} ready recipients using an admin-entered rate of ${rate.toFixed(2)} / ZEC.
+            </p>
+          </div>
+        {summary.invalidRows === 0 ? (
+          <div className="mt-6 rounded-3xl bg-mint p-5 text-sm text-pine">
+            Validation is clean. The next step is confirming required test transactions, then approving the mocked batch.
+          </div>
+        ) : (
+          <div className="mt-6 rounded-3xl bg-amber-50 p-5 text-sm text-amber-800">
+            Resolve validation blockers before expecting a clean approval run.
+          </div>
+        )}
         <div className="mt-6 flex flex-wrap gap-3">
           <Link href="/payroll/review" className="rounded-full bg-pine px-5 py-3 text-sm font-semibold text-white">
             Continue to review
@@ -323,7 +339,11 @@ export function ReviewView() {
             <div className="mt-4 rounded-3xl bg-amber-50 p-4 text-sm text-amber-800">
               {approvalBlockers.join(" ")}
             </div>
-          ) : null}
+          ) : (
+            <div className="mt-4 rounded-3xl bg-mint p-4 text-sm text-pine">
+              All approval gates are satisfied. Approve the batch to unlock exportable payout artifacts.
+            </div>
+          )}
           <div className="mt-6 rounded-3xl bg-slate-50 p-5">
             <p className="text-sm font-semibold text-ink">ZIP-321 preview</p>
             <p className="mt-3 break-all font-mono text-xs text-ink/70">{artifacts.zip321Uri || "Approve the ready recipients to generate a URI."}</p>
@@ -461,10 +481,11 @@ export function PayoutsView() {
               <h2 className="mt-3 text-2xl font-semibold text-ink">ZIP-321 URI text</h2>
             </div>
             <DownloadArtifactButton
-              label="Download .txt"
+              label={artifacts.zip321Uri ? "Download .txt" : "Download locked"}
               filename="run-0319-mvp.txt"
               content={artifacts.zip321Uri}
               mimeType="text/plain;charset=utf-8"
+              disabled={!artifacts.zip321Uri}
             />
           </div>
           <textarea readOnly value={artifacts.zip321Uri} className="mt-5 h-56 w-full rounded-3xl border border-slate-200 bg-slate-50 px-4 py-4 font-mono text-xs text-ink" />
@@ -476,10 +497,11 @@ export function PayoutsView() {
               <h2 className="mt-3 text-2xl font-semibold text-ink">JSON audit log</h2>
             </div>
             <DownloadArtifactButton
-              label="Download .json"
+              label={approvedAt ? "Download .json" : "Download locked"}
               filename="run-0319-mvp.json"
               content={artifacts.auditLog}
               mimeType="application/json;charset=utf-8"
+              disabled={!approvedAt}
             />
           </div>
           <textarea readOnly value={artifacts.auditLog} className="mt-5 h-56 w-full rounded-3xl border border-slate-200 bg-slate-50 px-4 py-4 font-mono text-xs text-ink" />

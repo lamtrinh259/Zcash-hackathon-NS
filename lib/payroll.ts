@@ -51,6 +51,14 @@ export const SAMPLE_RATE = 31.84;
 export const SAMPLE_CSV = `contractorId,name,role,country,usdAmount,wallet,requiresTestTx,memo
 CTR-301,Maya Thompson,Product Designer,United Kingdom,4200,u1mayathompson8kzt9q2l0p4x6s7v8w1y2z3a4b5c6d7e8f9g,true,March design sprint payout
 CTR-302,Leonardo Costa,Frontend Engineer,Brazil,5800,u1leonardocosta1fca9q2l0p4x6s7v8w1y2z3a4b5c6d7e8f9g,false,March frontend delivery payout
+CTR-303,Amaka Eze,QA Lead,Nigeria,3200,u1amakaeze4ade9q2l0p4x6s7v8w1y2z3a4b5c6d7e8f9g,true,Regression release validation payout
+CTR-304,Ryo Nishida,Data Analyst,Japan,4700,u1ryonishida6pwm9q2l0p4x6s7v8w1y2z3a4b5c6d7e8f9g,false,Analytics reporting cycle
+CTR-305,Sara Ben Youssef,Content Strategist,Morocco,2600,u1sarabenyoussef0qez9q2l0p4x6s7v8w1y2z3a4b5c6d7e8f9g,true,March content strategy payout
+CTR-306,Noah Kim,Growth Lead,South Korea,3900,u1noahkim2z8r9q2l0p4x6s7v8w1y2z3a4b5c6d7e8f9g,false,Growth experiments payout`;
+
+export const REVIEW_SAMPLE_CSV = `contractorId,name,role,country,usdAmount,wallet,requiresTestTx,memo
+CTR-301,Maya Thompson,Product Designer,United Kingdom,4200,u1mayathompson8kzt9q2l0p4x6s7v8w1y2z3a4b5c6d7e8f9g,true,March design sprint payout
+CTR-302,Leonardo Costa,Frontend Engineer,Brazil,5800,u1leonardocosta1fca9q2l0p4x6s7v8w1y2z3a4b5c6d7e8f9g,false,March frontend delivery payout
 CTR-303,Amaka Eze,QA Lead,Nigeria,3200,invalid_wallet,true,Manual address confirmation needed
 CTR-304,Ryo Nishida,Data Analyst,Japan,4700,u1ryonishida6pwm9q2l0p4x6s7v8w1y2z3a4b5c6d7e8f9g,false,Analytics reporting cycle
 CTR-305,Sara Ben Youssef,Content Strategist,Morocco,-2600,u1sarabenyoussef0qez9q2l0p4x6s7v8w1y2z3a4b5c6d7e8f9g,true,Negative amount should fail validation

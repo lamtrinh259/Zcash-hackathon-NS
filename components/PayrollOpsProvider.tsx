@@ -3,6 +3,7 @@
 import type { ReactNode } from "react";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import {
+  REVIEW_SAMPLE_CSV,
   SAMPLE_CSV,
   SAMPLE_RATE,
   buildArtifacts,
@@ -39,6 +40,7 @@ type PayrollOpsContextValue = {
   setCsvText: (value: string) => void;
   setRate: (value: number) => void;
   loadSampleCsv: () => void;
+  loadReviewSampleCsv: () => void;
   toggleTestTx: (contractorId: string) => void;
   approveBatch: () => void;
   resetBatch: () => void;
@@ -50,7 +52,7 @@ function defaultState(): StoredState {
   return {
     csvText: SAMPLE_CSV,
     rate: SAMPLE_RATE,
-    testTxConfirmed: { "CTR-301": true },
+    testTxConfirmed: { "CTR-301": true, "CTR-303": true, "CTR-305": true },
     approvedAt: null
   };
 }
@@ -76,7 +78,11 @@ function readStoredState(): StoredState {
 export function PayrollOpsProvider({ children }: { children: ReactNode }) {
   const [csvText, setCsvTextState] = useState(SAMPLE_CSV);
   const [rate, setRateState] = useState(SAMPLE_RATE);
-  const [testTxConfirmed, setTestTxConfirmed] = useState<Record<string, boolean>>({ "CTR-301": true });
+  const [testTxConfirmed, setTestTxConfirmed] = useState<Record<string, boolean>>({
+    "CTR-301": true,
+    "CTR-303": true,
+    "CTR-305": true
+  });
   const [approvedAt, setApprovedAt] = useState<string | null>(null);
   const [hasLoaded, setHasLoaded] = useState(false);
 
@@ -141,6 +147,12 @@ export function PayrollOpsProvider({ children }: { children: ReactNode }) {
       loadSampleCsv() {
         setApprovedAt(null);
         setCsvTextState(SAMPLE_CSV);
+        setTestTxConfirmed(defaultState().testTxConfirmed);
+      },
+      loadReviewSampleCsv() {
+        setApprovedAt(null);
+        setCsvTextState(REVIEW_SAMPLE_CSV);
+        setTestTxConfirmed({ "CTR-301": true });
       },
       toggleTestTx(contractorId: string) {
         setApprovedAt(null);

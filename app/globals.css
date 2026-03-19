@@ -4,6 +4,8 @@
 
 :root {
   color-scheme: light;
+  --font-body: "IBM Plex Sans", "Aptos", "Segoe UI", sans-serif;
+  --font-display: "Space Grotesk", "Avenir Next Condensed", "Trebuchet MS", sans-serif;
 }
 
 body {
