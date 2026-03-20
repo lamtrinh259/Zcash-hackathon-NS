@@ -340,7 +340,7 @@ export function ReviewView() {
                 canApproveBatch ? "bg-pine" : "cursor-not-allowed bg-slate-300"
               }`}
             >
-              Approve mocked payout batch
+              Approve payout batch
             </button>
             <Link href="/payouts" className="rounded-full border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-ink">
               View payout artifacts
@@ -392,41 +392,6 @@ export function ReviewView() {
         </div>
       </div>
       <ImportReviewTable rows={rows} testTxConfirmed={testTxConfirmed} onToggleTestTx={toggleTestTx} showValidation />
-      {approvedAt ? (
-        <div className="panel p-6">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <div>
-              <p className="text-lg font-semibold text-ink">Exportable artifacts unlocked</p>
-              <p className="text-sm text-ink/60">The demo keeps all payout logic mocked while still producing shareable output.</p>
-            </div>
-            <div className="flex flex-wrap gap-3">
-              <DownloadArtifactButton
-                label="Download handoff .txt"
-                filename="run-0319-zodl-handoff.txt"
-                content={artifacts.handoffText}
-                mimeType="text/plain;charset=utf-8"
-              />
-              <DownloadArtifactButton
-                label="Download audit log"
-                filename="run-0319-mvp.json"
-                content={artifacts.auditLog}
-                mimeType="application/json;charset=utf-8"
-              />
-            </div>
-          </div>
-          <div className="mt-5 grid gap-4 lg:grid-cols-2">
-            <textarea readOnly value={artifacts.zip321Uri} className="h-40 w-full rounded-3xl border border-slate-200 bg-slate-50 px-4 py-4 font-mono text-xs text-ink" />
-            <textarea readOnly value={artifacts.auditLog} className="h-40 w-full rounded-3xl border border-slate-200 bg-slate-50 px-4 py-4 font-mono text-xs text-ink" />
-          </div>
-        </div>
-      ) : null}
-      <MobileSigningHandoff
-        zip321Uri={artifacts.zip321Uri}
-        handoffText={artifacts.handoffText}
-        approvedAt={approvedAt}
-        recipientCount={summary.readyRows}
-        totalZec={summary.totalZec}
-      />
     </div>
   );
 }
