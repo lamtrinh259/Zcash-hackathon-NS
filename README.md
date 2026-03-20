@@ -6,6 +6,8 @@
 
 **Watch the demo:** https://youtu.be/gP2z371wl1s
 
+**Demo transaction (from the video):** https://cipherscan.app/tx/2c1ad1e0a459d0401b7165ab81fc2f1b08acd5bc4c775d695740211837a1c7ac
+
 Hackathon MVP for privacy-preserving contractor payout ops using ZEC. The app turns contractor payout data into a reviewable batch, validates recipients and amounts, converts USD-denominated obligations into ZEC at an admin-entered rate, enforces per-recipient test transactions, and generates a spec-compliant ZIP-321 multi-payment URI plus exportable audit artifacts — including a scannable QR code for direct Zodl mobile handoff.
 
 ## Framing
