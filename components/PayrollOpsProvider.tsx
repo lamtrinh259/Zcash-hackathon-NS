@@ -52,7 +52,7 @@ function defaultState(): StoredState {
   return {
     csvText: SAMPLE_CSV,
     rate: SAMPLE_RATE,
-    testTxConfirmed: { "CTR-301": true, "CTR-303": true, "CTR-305": true },
+    testTxConfirmed: {},
     approvedAt: null
   };
 }
@@ -78,11 +78,7 @@ function readStoredState(): StoredState {
 export function PayrollOpsProvider({ children }: { children: ReactNode }) {
   const [csvText, setCsvTextState] = useState(SAMPLE_CSV);
   const [rate, setRateState] = useState(SAMPLE_RATE);
-  const [testTxConfirmed, setTestTxConfirmed] = useState<Record<string, boolean>>({
-    "CTR-301": true,
-    "CTR-303": true,
-    "CTR-305": true
-  });
+  const [testTxConfirmed, setTestTxConfirmed] = useState<Record<string, boolean>>({});
   const [approvedAt, setApprovedAt] = useState<string | null>(null);
   const [hasLoaded, setHasLoaded] = useState(false);
 

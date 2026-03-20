@@ -50,12 +50,8 @@ export type WorkflowGate = {
 export const SAMPLE_RATE = 250;
 
 export const SAMPLE_CSV = `contractorId,name,role,country,usdAmount,wallet,requiresTestTx,memo
-CTR-301,Maya Thompson,Product Designer,United Kingdom,4200,u1mayathompson8kzt9q2l0p4x6s7v8w1y2z3a4b5c6d7e8f9g,true,March design sprint payout
-CTR-302,Leonardo Costa,Frontend Engineer,Brazil,5800,u1leonardocosta1fca9q2l0p4x6s7v8w1y2z3a4b5c6d7e8f9g,false,March frontend delivery payout
-CTR-303,Amaka Eze,QA Lead,Nigeria,3200,u1amakaeze4ade9q2l0p4x6s7v8w1y2z3a4b5c6d7e8f9g,true,Regression release validation payout
-CTR-304,Ryo Nishida,Data Analyst,Japan,4700,u1ryonishida6pwm9q2l0p4x6s7v8w1y2z3a4b5c6d7e8f9g,false,Analytics reporting cycle
-CTR-305,Sara Ben Youssef,Content Strategist,Morocco,2600,u1sarabenyoussef0qez9q2l0p4x6s7v8w1y2z3a4b5c6d7e8f9g,true,March content strategy payout
-CTR-306,Noah Kim,Growth Lead,South Korea,3900,u1noahkim2z8r9q2l0p4x6s7v8w1y2z3a4b5c6d7e8f9g,false,Growth experiments payout`;
+0xhardworker,Video editor,Editor,Japan,0.25,u1jntxlusht6nmfjq6urkyjyw79hvu26c5x75at3lnycts4teshe8hd95xlm83ylgy20xrd96rplqhvx2ffe5e8ax4a9jmvxuxdukxr8s3zhmdvt429z3j4m9yt24pfm7nf6gqsdrs76frxzq5ma4hetutx9qrp89nnpu0wnhlxgeucs45,FALSE,ZODL test
+0xwriter,Writer-kun,Writer,Vietnam,0.05,u1d6phn3fnz6eg7gwpra3pgn63d6uagwrpnkx0luhxr73wx6ql5s2t0rmqach26nsuwre8adkz65e6zc9trdmfdkaexfp2ncx6uv2h0qwhgzeqa20ttng4ajn3p0shqxneteumyxu9t0flglsm8k9s5tt4vgx5c23fqyrt3rmpysw0t65f,FALSE,Article payment`;
 
 export const REVIEW_SAMPLE_CSV = `contractorId,name,role,country,usdAmount,wallet,requiresTestTx,memo
 CTR-301,Maya Thompson,Product Designer,United Kingdom,4200,u1mayathompson8kzt9q2l0p4x6s7v8w1y2z3a4b5c6d7e8f9g,true,March design sprint payout
