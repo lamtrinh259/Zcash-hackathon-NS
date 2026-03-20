@@ -149,9 +149,19 @@ export function TeamImportView() {
             >
               Load validation edge cases
             </button>
-            <Link href="/payroll/create" className="rounded-full bg-pine px-5 py-3 text-sm font-semibold text-white">
-              Continue to batch preview
-            </Link>
+            {invalidRows.length === 0 ? (
+              <Link href="/payroll/create" className="rounded-full bg-pine px-5 py-3 text-sm font-semibold text-white">
+                Continue to batch preview
+              </Link>
+            ) : (
+              <button
+                type="button"
+                disabled
+                className="cursor-not-allowed rounded-full bg-slate-200 px-5 py-3 text-sm font-semibold text-slate-400"
+              >
+                Continue to batch preview
+              </button>
+            )}
           </div>
         </div>
         <div className="panel p-6">
@@ -172,7 +182,7 @@ export function TeamImportView() {
           </div>
           <div className="mt-5 rounded-3xl bg-rose-50 p-5 text-sm text-rose-800">
             {invalidRows.length > 0
-              ? `${invalidRows.length} row-level validation errors are visible in the table. Switch back to the happy-path sample when you want the clean approval flow.`
+              ? `${invalidRows.length} row-level validation error${invalidRows.length === 1 ? "" : "s"} visible in the table. Please review and fix the errors before proceeding further.`
               : "All rows currently pass validation. Continue to conversion to preview the ready batch totals."}
           </div>
         </div>
