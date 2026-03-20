@@ -1,5 +1,11 @@
 # ZEC Payroll Tool
 
+## Demo Video
+
+[![Watch the demo video](https://img.youtube.com/vi/gP2z371wl1s/maxresdefault.jpg)](https://youtu.be/gP2z371wl1s)
+
+**Watch the demo:** https://youtu.be/gP2z371wl1s
+
 Hackathon MVP for privacy-preserving contractor payout ops using ZEC. The app turns contractor payout data into a reviewable batch, validates recipients and amounts, converts USD-denominated obligations into ZEC at an admin-entered rate, enforces per-recipient test transactions, and generates a spec-compliant ZIP-321 multi-payment URI plus exportable audit artifacts — including a scannable QR code for direct Zodl mobile handoff.
 
 ## Framing
