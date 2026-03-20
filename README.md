@@ -8,14 +8,24 @@
 
 **Demo transaction (from the video):** https://cipherscan.app/tx/2c1ad1e0a459d0401b7165ab81fc2f1b08acd5bc4c775d695740211837a1c7ac
 
-Hackathon MVP for paying people for digital work with shielded ZEC while reducing payout mistakes and adding low-trust operational safeguards. The app turns contractor payout data into a reviewable batch, validates recipients and amounts, converts USD-denominated obligations into ZEC at an admin-entered rate, enforces per-recipient test transactions, and generates a spec-compliant ZIP-321 multi-payment URI plus exportable audit artifacts — including a scannable QR code for direct Zodl mobile handoff.
+ZEC Payroll Tool is a hackathon MVP for paying people for digital work with shielded ZEC while reducing payout mistakes and adding low-trust operational safeguards. The app turns contractor payout data into a reviewable batch, validates recipients and amounts, converts USD-denominated obligations into ZEC at an admin-entered rate, enforces per-recipient test transactions, and generates a spec-compliant ZIP-321 multi-payment URI plus exportable audit artifacts — including a scannable QR code for direct Zodl mobile handoff.
 
-## Framing
+## Problem Statement
 
-This is crypto payout ops for contractor batches.
+Paying contractors with crypto still breaks down at the ops layer.
+Teams may want the privacy and settlement properties of shielded ZEC, but they still need a practical way to:
+
+- prepare payout batches from real tabular data
+- catch formatting and amount errors before funds move
+- require lightweight test transactions when needed
+- hand off a final payment request into a wallet that can actually sign it
+
+This project focuses on that operational layer.
 It is not payroll compliance software, HRIS, tax tooling, or live chain infrastructure.
 
-For this hackathon prototype, the strongest implemented path is:
+## What the app does
+
+The current product flow is:
 
 1. import a CSV or paste payout rows
 2. validate recipients and amounts
@@ -24,7 +34,7 @@ For this hackathon prototype, the strongest implemented path is:
 5. generate a spec-compliant ZIP-321 multi-payment URI
 6. scan the QR code in **Zodl mobile** or copy/paste the URI for signing
 
-## What is implemented now
+## Implemented Features
 
 ### Core workflow
 
@@ -67,7 +77,7 @@ The repo includes automated tests for the core logic:
 
 Run them with:
 
-```
+```bash
 npm test
 ```
 
@@ -76,7 +86,7 @@ npm test
 Zodl wallet is treated as a **mobile-only signing target**.
 This prototype does **not** pretend signing happens inside the browser.
 
-The intended demo flow is:
+The live handoff flow is:
 
 1. approve the batch on `/payroll/review`
 2. go to `/payouts` — the ZIP-321 URI is generated immediately
@@ -101,7 +111,7 @@ Use Node `22` or newer. The repo includes `.nvmrc`, `.npmrc`, and a committed `p
 - `Load validation edge cases` restores intentionally broken rows for validation demos.
 - On the `/team` page: **Continue to batch preview** (green) advances the workflow; other buttons are secondary actions.
 
-## What is mocked or intentionally simplified
+## Current limitations
 
 - Zodl signing is represented as a QR/handoff flow, not in-browser wallet execution
 - Zodl + NEAR intents for USDC payouts are not fully implemented yet
@@ -111,4 +121,3 @@ Use Node `22` or newer. The repo includes `.nvmrc`, `.npmrc`, and a committed `p
 - wallet validation goes only as deep as a lightweight format sanity check
 - payout approval effects, queueing, confirmations, and receipts are prototype-level
 - payroll tax, withholding, classification, and local compliance logic are out of scope
-
