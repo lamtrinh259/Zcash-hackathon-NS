@@ -8,7 +8,7 @@
 
 **Demo transaction (from the video):** https://cipherscan.app/tx/2c1ad1e0a459d0401b7165ab81fc2f1b08acd5bc4c775d695740211837a1c7ac
 
-Hackathon MVP for privacy-preserving contractor payout ops using ZEC. The app turns contractor payout data into a reviewable batch, validates recipients and amounts, converts USD-denominated obligations into ZEC at an admin-entered rate, enforces per-recipient test transactions, and generates a spec-compliant ZIP-321 multi-payment URI plus exportable audit artifacts — including a scannable QR code for direct Zodl mobile handoff.
+Hackathon MVP for paying people for digital work with shielded ZEC while reducing payout mistakes and adding low-trust operational safeguards. The app turns contractor payout data into a reviewable batch, validates recipients and amounts, converts USD-denominated obligations into ZEC at an admin-entered rate, enforces per-recipient test transactions, and generates a spec-compliant ZIP-321 multi-payment URI plus exportable audit artifacts — including a scannable QR code for direct Zodl mobile handoff.
 
 ## Framing
 
@@ -101,15 +101,6 @@ Use Node `22` or newer. The repo includes `.nvmrc`, `.npmrc`, and a committed `p
 - `Load validation edge cases` restores intentionally broken rows for validation demos.
 - On the `/team` page: **Continue to batch preview** (green) advances the workflow; other buttons are secondary actions.
 
-## Demo script
-
-1. On `/`, frame the product as private contractor payout ops using ZEC.
-2. On `/team`, upload the sample CSV or edit the pasted seed data and point out row-level validation issues. Click **Continue to batch preview** when ready.
-3. On `/payroll/create`, adjust the admin USD/ZEC rate (default $250) and show the batch totals recalculate live in the conversion widget.
-4. On `/payroll/review`, confirm required test transactions per recipient and show that approval is blocked until required confirmations exist.
-5. On `/payouts`, show the generated ZIP-321 QR code — scan it with Zodl on a phone. Also show the JSON audit log export.
-6. On `/receipts`, show the contractor-facing receipt language and payout history.
-
 ## What is mocked or intentionally simplified
 
 - Zodl signing is represented as a QR/handoff flow, not in-browser wallet execution
@@ -121,16 +112,3 @@ Use Node `22` or newer. The repo includes `.nvmrc`, `.npmrc`, and a committed `p
 - payout approval effects, queueing, confirmations, and receipts are prototype-level
 - payroll tax, withholding, classification, and local compliance logic are out of scope
 
-## Why this still fits the track
-
-The core Earn use case is paying people for digital work with shielded ZEC while reducing payout mistakes and adding low-trust operational safeguards.
-
-This prototype already demonstrates the most important proof point:
-
-- a payroll batch can be generated from CSV
-- validated and reviewed
-- gated on test transactions
-- converted into a spec-compliant ZIP-321 multi-payment request
-- handed off to Zodl mobile via QR code scan
-
-That is a solid functional prototype for the track.
